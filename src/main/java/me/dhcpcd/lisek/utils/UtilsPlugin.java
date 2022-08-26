@@ -11,6 +11,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import me.dhcpcd.lisek.utils.commands.base.CommandBase;
 import me.dhcpcd.lisek.utils.commands.base.CommandInfo;
 import me.dhcpcd.lisek.utils.players.PlayerInfo;
+import me.dhcpcd.lisek.utils.players.PlayerLoader;
 import me.dhcpcd.lisek.utils.players.conversations.Conversation;
 
 import java.util.ArrayList;
@@ -45,8 +46,7 @@ public class UtilsPlugin {
         registerCommands();
         setInstance(this);
         conversations.add(new Conversation(UUID.randomUUID(), "global", true, this));
-        
-
+        server.getEventManager().register(this, new PlayerLoader());
     }
 
     private void registerCommands() {

@@ -22,4 +22,10 @@ public @interface SubCommand {
      * @return Method, accepts invocation as argument
      */
     String autoComplete() default "";
+
+    /**
+     * @description Calls on any argument
+     * @return
+     */
+    boolean callOnAnyArgument() default false;
 }

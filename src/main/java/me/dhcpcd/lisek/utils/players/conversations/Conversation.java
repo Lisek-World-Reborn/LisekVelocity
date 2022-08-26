@@ -58,7 +58,7 @@ public class Conversation {
             .append(Component.text(" >").color(NamedTextColor.GRAY))
             .append(Component.text(" You have joined conversation ").color(NamedTextColor.WHITE))
             .append(Component.text(name).color(NamedTextColor.AQUA)));
-            
+        
         joinConversation(player.getUniqueId());
     }
 

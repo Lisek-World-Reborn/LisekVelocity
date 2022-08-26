@@ -1,6 +1,7 @@
 package me.dhcpcd.lisek.utils.commands.base;
 
 import java.lang.reflect.Method;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +41,8 @@ public class CommandBase implements RawCommand {
        
         String[] args = invocation.arguments().split(" ");
         String subCommandName = args[0];
-
         Optional<Method> subCommandJavaMethodOptional = Arrays.stream(getClass().getMethods()).filter(m -> m.isAnnotationPresent(SubCommand.class)).filter(m -> m.getAnnotation(SubCommand.class).name().equalsIgnoreCase(subCommandName)).findFirst();
+
 
 
         if (!subCommandJavaMethodOptional.isPresent()) {
@@ -107,7 +108,17 @@ public class CommandBase implements RawCommand {
         if (arguments == 0) {
             FallbackMethod fallbackMethod = Arrays.stream(getClass().getMethods()).filter(m -> m.isAnnotationPresent(FallbackMethod.class)).findFirst().get().getAnnotation(FallbackMethod.class);
 
+
             List<String> suggestions = new ArrayList<>();
+
+            if (!fallbackMethod.autoComplete().isEmpty()) {
+                try {
+                    List<String> suggests = (List<String>) getClass().getMethod(fallbackMethod.autoComplete(), Invocation.class).invoke(this, invocation);
+                    suggestions.addAll(suggests);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             if (fallbackMethod.acceptsPlayer()) {
                 for (Player player : server.getAllPlayers()) {
                     suggestions.add(player.getUsername());
