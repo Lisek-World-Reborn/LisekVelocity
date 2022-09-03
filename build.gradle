@@ -5,7 +5,6 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     //maven publish
     id 'maven-publish'
-    id "io.freefair.github.package-registry-maven-publish" version "6.5.1"
 }
 
 group = 'Lisek-World-Reborn'
