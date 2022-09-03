@@ -78,7 +78,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/Lisek-World-Reborn/LisekVelocity")
+            url = uri("https://maven.pkg.github.com")
             credentials {
                 username = System.getenv("USERNAME") ? System.getenv("USERNAME") : "NO USER"
                 password = System.getenv("TOKEN") ? System.getenv("TOKEN") : "NO PASS"
