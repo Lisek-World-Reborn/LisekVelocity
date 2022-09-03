@@ -7,8 +7,8 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'Lisek-World-Reborn'
-version = '1.0-SNAPSHOT'
+group = 'lisek-world-reborn'
+version = '1.0-snapshot'
 
 repositories {
     maven {
