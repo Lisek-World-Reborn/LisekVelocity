@@ -2,7 +2,9 @@ plugins {
     id 'java'
     id 'eclipse'
     id "org.jetbrains.gradle.plugin.idea-ext" version "1.0.1"
-      id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    //maven publish
+    id 'maven-publish'
 }
 
 group = 'LisekUtils'
@@ -14,11 +16,17 @@ repositories {
         url = 'https://repo.papermc.io/repository/maven-public/'
     }
       mavenCentral()
+
+    maven {
+        url = 'https://raw.github.com/mercadolibre/java-restclient/mvn-repo/'
+    }
     
 }
 
 dependencies {
     compileOnly 'com.velocitypowered:velocity-api:3.1.1'
+    implementation 'redis.clients:jedis:4.2.3'
+    implementation 'com.sendgrid:java-http-client:4.5.0'
     implementation 'org.reflections:reflections:0.10.2'
 
     annotationProcessor 'com.velocitypowered:velocity-api:3.1.1'
@@ -40,11 +48,12 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
+
 def templateSource = file('src/main/templates')
 def templateDest = layout.buildDirectory.dir('generated/sources/templates')
 def generateTemplates = tasks.register('generateTemplates', Copy) { task ->
     def props = [
-            'version': project.version
+            'version': project.version + "-" + getDate()
     ]
     task.inputs.properties props
 
@@ -57,3 +66,27 @@ sourceSets.main.java.srcDir(generateTemplates.map { it.outputs })
 
 rootProject.idea.project.settings.taskTriggers.afterSync generateTemplates
 project.eclipse.synchronizationTasks(generateTemplates)
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmmss')
+    return formattedDate
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Lisek-World-Reborn/LisekVelocity")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}

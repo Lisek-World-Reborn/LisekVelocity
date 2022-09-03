@@ -8,6 +8,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 
+import me.dhcpcd.lisek.utils.api.LisekApi;
 import me.dhcpcd.lisek.utils.commands.base.CommandBase;
 import me.dhcpcd.lisek.utils.commands.base.CommandInfo;
 import me.dhcpcd.lisek.utils.players.PlayerInfo;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 import org.reflections.Reflections;
 import org.slf4j.Logger;
+import redis.clients.jedis.JedisPooled;
 
 @Plugin(
         id = "lisekutils",
@@ -30,7 +32,8 @@ import org.slf4j.Logger;
 public class UtilsPlugin {
 
     public static UtilsPlugin instance;
-
+    public JedisPooled jedisPooled;
+    private LisekApi lisekApi;
     @Inject
     private ProxyServer server;
 
@@ -47,6 +50,17 @@ public class UtilsPlugin {
         setInstance(this);
         conversations.add(new Conversation(UUID.randomUUID(), "global", true, this));
         server.getEventManager().register(this, new PlayerLoader());
+
+        String host = System.getenv("REDIS_HOST");
+        String port = System.getenv("REDIS_PORT");
+
+        jedisPooled = new JedisPooled(host, Integer.parseInt(port));
+
+        lisekApi = new LisekApi("api.lisek.world", System.getenv("API_KEY"));
+    }
+
+    public LisekApi getLisekApi() {
+        return lisekApi;
     }
 
     private void registerCommands() {
