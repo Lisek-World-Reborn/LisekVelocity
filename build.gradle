@@ -79,8 +79,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com")
             credentials {
-                username = System.getenv("USERNAME") ? System.getenv("USERNAME") : "NO USER"
-                password = System.getenv("TOKEN") ? System.getenv("TOKEN") : "NO PASS"
+                username = System.getenv("USERNAME") ? System.getenv("GITHUB_USER") : "NO USER"
+                password = System.getenv("TOKEN") ? System.getenv("GITHUB_TOKEN") : "NO PASS"
             }
         }
     }
