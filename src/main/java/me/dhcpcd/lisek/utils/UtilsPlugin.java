@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import me.dhcpcd.lisek.utils.redis.Redis;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import redis.clients.jedis.JedisPooled;
@@ -32,7 +33,7 @@ import redis.clients.jedis.JedisPooled;
 public class UtilsPlugin {
 
     public static UtilsPlugin instance;
-    public JedisPooled jedisPooled;
+    public Redis redis;
     private LisekApi lisekApi;
     @Inject
     private ProxyServer server;
@@ -54,9 +55,17 @@ public class UtilsPlugin {
         String host = System.getenv("REDIS_HOST");
         String port = System.getenv("REDIS_PORT");
 
-        jedisPooled = new JedisPooled(host, Integer.parseInt(port));
+        redis = new Redis(host, Integer.parseInt(port));
 
-        lisekApi = new LisekApi("api.lisek.world", System.getenv("API_KEY"));
+        lisekApi = new LisekApi(System.getenv("API_HOST"), System.getenv("API_KEY"));
+
+        redis.registerCurrentServers();
+        redis.listenToServerAdded();
+
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 
     public LisekApi getLisekApi() {

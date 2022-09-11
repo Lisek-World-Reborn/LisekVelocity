@@ -3,6 +3,7 @@ package me.dhcpcd.lisek.utils.commands;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.dhcpcd.lisek.utils.UtilsPlugin;
@@ -42,6 +43,6 @@ public class ServerCommand extends CommandBase {
     }
 
     public List<String> getServers(Invocation invocation) {
-        return UtilsPlugin.getInstance().getServer().getAllServers().stream().map(c -> c.getServerInfo().getName()).toList();
+        return UtilsPlugin.getInstance().getServer().getAllServers().stream().map(c -> c.getServerInfo().getName()).collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package me.dhcpcd.lisek.utils.players;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
@@ -25,7 +26,7 @@ public class PlayerLoader {
         PlayerInfo info = new PlayerInfo(e.getPlayer().getUniqueId(), proxyServer);
         UtilsPlugin.players.put(e.getPlayer().getUniqueId(), info);
 
-        List<Conversation> converstations = UtilsPlugin.conversations.stream().filter(c -> c.getAutoJoin()).toList();
+        List<Conversation> converstations = UtilsPlugin.conversations.stream().filter(c -> c.getAutoJoin()).collect(Collectors.toList());
 
         for (Conversation conversation : converstations) {
             conversation.joinConversation(e.getPlayer());

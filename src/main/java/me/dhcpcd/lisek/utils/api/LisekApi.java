@@ -10,6 +10,7 @@ import me.dhcpcd.lisek.utils.api.response.LisekServerInfo;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 public class LisekApi {
     public Client client;
@@ -53,4 +54,24 @@ public class LisekApi {
 
         return null;
     }
+
+    public List<LisekServerInfo> getServers() {
+        Request request = getRequest("/servers", Method.GET);
+
+        try {
+            Response response = client.api(request);
+
+            if (response.getStatusCode() == 200) {
+                LisekServerInfo[] serverInfo = new Gson().fromJson(response.getBody(), LisekServerInfo[].class);
+
+                return Arrays.asList(serverInfo);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+
 }
