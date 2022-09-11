@@ -52,15 +52,21 @@ public class UtilsPlugin {
         conversations.add(new Conversation(UUID.randomUUID(), "global", true, this));
         server.getEventManager().register(this, new PlayerLoader());
 
-        String host = System.getenv("REDIS_HOST");
-        String port = System.getenv("REDIS_PORT");
 
-        redis = new Redis(host, Integer.parseInt(port));
 
-        lisekApi = new LisekApi(System.getenv("API_HOST") + ":" + System.getenv("API_PORT"), System.getenv("API_KEY"));
+        getServer().getScheduler().buildTask(this, () -> {
 
-        redis.registerCurrentServers();
-        redis.listenToServerAdded();
+            lisekApi = new LisekApi(System.getenv("API_HOST") + ":" + System.getenv("API_PORT"), System.getenv("API_KEY"));
+
+            String host = System.getenv("REDIS_HOST");
+            String port = System.getenv("REDIS_PORT");
+            redis = new Redis(host, Integer.parseInt(port));
+
+            redis.registerCurrentServers();
+            redis.listenToServerAdded();
+
+        }).schedule();
+
 
     }
 
