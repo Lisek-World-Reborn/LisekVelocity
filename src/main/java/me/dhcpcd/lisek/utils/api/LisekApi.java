@@ -15,18 +15,23 @@ import java.util.List;
 public class LisekApi {
     public Client client;
     private String token;
+    private String host;
 
     public LisekApi(String host, String secret) {
-        client = new Client();
+        this.host = host;
+        client = new Client(true);
+
+
     }
 
     private Request getRequest(String endpoint, Method method) {
         Request request = new Request();
 
+
         request.setMethod(method);
         request.setEndpoint(endpoint);
         request.addHeader("Authorization", token);
-        request.setBaseUri("https://api.lisek.world");
+        request.setBaseUri(host);
 
         return request;
     }
@@ -57,6 +62,7 @@ public class LisekApi {
 
     public List<LisekServerInfo> getServers() {
         Request request = getRequest("/servers", Method.GET);
+
 
         try {
             Response response = client.api(request);

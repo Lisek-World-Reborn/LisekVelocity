@@ -57,7 +57,7 @@ public class UtilsPlugin {
 
         redis = new Redis(host, Integer.parseInt(port));
 
-        lisekApi = new LisekApi(System.getenv("API_HOST"), System.getenv("API_KEY"));
+        lisekApi = new LisekApi(System.getenv("API_HOST") + ":" + System.getenv("API_PORT"), System.getenv("API_KEY"));
 
         redis.registerCurrentServers();
         redis.listenToServerAdded();

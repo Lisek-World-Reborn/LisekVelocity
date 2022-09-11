@@ -69,11 +69,22 @@ public class Redis {
         };
 
         jedisPooled.subscribe(jedisPubSub, "servers:added", "players:connect", "server:removed");
+
+        UtilsPlugin.getInstance().getLogger().info("Subscribed to Redis");
     }
 
 
     public void registerCurrentServers() {
+
+        UtilsPlugin.getInstance().getLogger().info("Registering current servers...");
+
         UtilsPlugin.getInstance().getLisekApi().getServers().forEach(server -> {
+
+
+            UtilsPlugin.getInstance().getServer().getServer(server.name).ifPresent(serverInfo -> {
+                UtilsPlugin.getInstance().getServer().unregisterServer(serverInfo.getServerInfo());
+            });
+
             UtilsPlugin.getInstance().getServer().registerServer(new ServerInfo(server.name, new InetSocketAddress(server.ip, server.port)));
 
             UtilsPlugin.getInstance().getLogger().info("Registered server " + server.name + " from api");
