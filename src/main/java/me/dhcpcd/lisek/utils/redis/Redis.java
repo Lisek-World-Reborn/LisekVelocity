@@ -29,6 +29,7 @@ public class Redis {
         JedisPubSub jedisPubSub = new JedisPubSub() {
             @Override
             public void onMessage(String channel, String message) {
+                UtilsPlugin.getInstance().getLogger().info("Received message from channel " + channel + ": " + message);
                 if (channel.equals("servers:added")) {
                     Gson gson = new Gson();
                     JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
@@ -50,9 +51,9 @@ public class Redis {
                     String server = jsonObject.get("server").getAsString();
 
                     UtilsPlugin.getInstance().getServer().getPlayer(username).ifPresent(player -> {
-                        player.createConnectionRequest(UtilsPlugin.getInstance().getServer().getServer(server).get()).fireAndForget();
-
                         player.sendMessage(Component.text("Connecting to ").append(Component.text(server).color(NamedTextColor.BLUE)));
+
+                        player.createConnectionRequest(UtilsPlugin.getInstance().getServer().getServer(server).get()).fireAndForget();
                     });
 
                 }
