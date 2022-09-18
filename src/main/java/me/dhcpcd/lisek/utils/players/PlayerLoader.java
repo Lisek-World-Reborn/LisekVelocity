@@ -31,5 +31,8 @@ public class PlayerLoader {
         for (Conversation conversation : converstations) {
             conversation.joinConversation(e.getPlayer());
         }
+
+
+
     }
 }

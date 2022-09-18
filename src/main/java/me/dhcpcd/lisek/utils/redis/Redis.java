@@ -3,6 +3,7 @@ package me.dhcpcd.lisek.utils.redis;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import me.dhcpcd.lisek.utils.UtilsPlugin;
 import me.dhcpcd.lisek.utils.api.response.LisekServerInfo;
@@ -12,6 +13,7 @@ import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.JedisPubSub;
 
 import java.net.InetSocketAddress;
+import java.util.Optional;
 
 public class Redis {
 
@@ -52,8 +54,15 @@ public class Redis {
 
                     UtilsPlugin.getInstance().getServer().getPlayer(username).ifPresent(player -> {
                         player.sendMessage(Component.text("Connecting to ").append(Component.text(server).color(NamedTextColor.BLUE)));
+                        Optional<RegisteredServer> registeredServer = UtilsPlugin.getInstance().getServer().getServer(server);
 
-                        player.createConnectionRequest(UtilsPlugin.getInstance().getServer().getServer(server).get()).fireAndForget();
+                        if (!registeredServer.isPresent()) {
+                            player.sendMessage(Component.text("Could not connect to server: ").append(Component.text(server).color(NamedTextColor.RED)).append(Component.text(" because it does not exist.").color(NamedTextColor.RED)));
+                            return;
+                        }
+
+                        player.createConnectionRequest(registeredServer.get()).fireAndForget();
+
                     });
 
                 }
